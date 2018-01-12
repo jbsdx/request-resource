@@ -1,0 +1,26 @@
+{
+  "name": "request-resource",
+  "version": "0.0.1",
+  "description": "Request different http resources and return it as json list",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbsdx/request-resource.git"
+  },
+  "keywords": [
+    "node",
+    "request",
+    "json",
+    "xml",
+    "rss"
+  ],
+  "author": "Jonas Benz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jbsdx/request-resource/issues"
+  },
+  "homepage": "https://github.com/jbsdx/request-resource#readme"
+}
