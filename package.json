@@ -1,8 +1,9 @@
 {
   "name": "request-resource",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Request different http resources and return it as json list",
   "main": "dist/lib/index.js",
+  "types": "dist/lib/index.d.ts",
   "scripts": {
     "test": "mocha -r ts-node/register test/**/*.ts"
   },
