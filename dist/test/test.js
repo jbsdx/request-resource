@@ -1,42 +1,27 @@
-import { JsonResource } from '../lib/resource/format/JsonResource';
+import { ResourceFormat } from '../lib/resource/ResourceFormat';
 import { assert } from "chai";
-import { RssResource } from '../lib/resource/format/RssResource';
-import { XmlResource } from '../lib/resource/format/XmlResource';
-const jsonStringMock = '[{"test": "test"}]';
-const xmlStringMock = `<?xml version="2.0" encoding="utf-8"?>
-<base field="test">
-    <entry attribute="mock">entryValue</entry>
-</base>`;
-const rssStringMock = `<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0">
-  <channel>
-    <title>Titel des Feeds</title>
-    <link>URL der Webpräsenz</link>
-    <description>Kurze Beschreibung des Feeds</description>
-    <language>Sprache des Feeds (z. B. "de-de")</language>
-    <copyright>Autor des Feeds</copyright>
-    <pubDate>Erstellungsdatum("Tue, 8 Jul 2008 2:43:19")</pubDate>
-    <image>
-      <url>URL einer einzubindenden Grafik</url>
-      <title>Bildtitel</title>
-      <link>URL, mit der das Bild verknüpft ist</link>
-    </image>
-    <item>
-      <title>Titel des Eintrags</title>
-      <description>Kurze Zusammenfassung des Eintrags</description>
-      <link>Link zum vollständigen Eintrag</link>
-      <author>Autor des Artikels, E-Mail-Adresse</author>
-      <guid>Eindeutige Identifikation des Eintrages</guid>
-      <pubDate>Datum des Items</pubDate>
-    </item>
-  </channel>
-</rss>
-`;
+import * as fs from "file-system";
+import { Request } from '../lib/request/Request';
+import * as create from 'create-server';
+const server = new create({ hostname: "localhost", port: 3091 }, {
+    listening: function (err) { },
+    request: function (req, res) {
+        res.write(fs.readFileSync(__dirname + "/data." + req.url.substr(1)));
+        res.end();
+    }
+});
+const LOCAL_URL = "http://localhost:3091/";
+const RSS = ResourceFormat.RSS;
+const JSON = ResourceFormat.JSON;
+const XML = ResourceFormat.XML;
+after(function () {
+    server.close();
+});
 describe('RequestResource module', function () {
     describe('#JSON format resource test', function () {
         it('should parse valid JSON data', function (done) {
-            let type = new JsonResource();
-            type.convertToJson(jsonStringMock)
+            let request = new Request(LOCAL_URL + "json", JSON);
+            request.fetch()
                 .then(response => {
                 assert.equal(response[0].test, "test");
                 done();
@@ -46,30 +31,19 @@ describe('RequestResource module', function () {
     });
     describe('#RSS format resource test', function () {
         it('should parse valid RSS data', function (done) {
-            let type = new RssResource();
-            type.convertToJson(rssStringMock)
+            let request = new Request(LOCAL_URL + "rss", RSS);
+            request.fetch()
                 .then(response => {
                 assert.equal(response.rss.version, "2.0");
                 done();
             })
                 .catch(reason => done(reason));
         });
-        /*
-        it('should request localhost server', function (done) {
-            let res = new Request("http://localhost:3090/", ResourceFormat.XML);
-            res.fetch()
-            .then(response => {
-                assert.equal(response.rss.version, "2.0");
-                done();
-            })
-            .catch(reason => done(reason));
-        });
-        */
     });
     describe('#XML format resource test', function () {
         it('should parse valid XML data', function (done) {
-            let type = new XmlResource();
-            type.convertToJson(xmlStringMock)
+            let request = new Request(LOCAL_URL + "xml", XML);
+            request.fetch()
                 .then(response => {
                 assert.equal(response.base.field, "test");
                 done();
