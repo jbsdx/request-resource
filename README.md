@@ -1,10 +1,8 @@
 # Usage example
 
 ```typescript
-let type = new JsonResource();
-let url = new URL("http://localhost:3090/");
-
-let agent = new Request(url, type );
+let format = ResourceFormat.RSS;
+let agent = new Request("http://localhost:3090/", format );
 agent.fetch()
     .then((response) => {
         assert.equal(response[0].test, "test");

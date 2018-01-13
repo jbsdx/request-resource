@@ -1,9 +1,8 @@
-
 export class URL {
-
-    constructor(public url: string) {}
-
-    public isValid(): boolean {
+    constructor(url) {
+        this.url = url;
+    }
+    isValid() {
         /* let expression = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gi,
             regex = new RegExp(expression),
             valid = false;
@@ -14,9 +13,8 @@ export class URL {
         let valid = true;
         return valid;
     }
-
-    public toString(): string {
+    toString() {
         return this.url;
     }
-
 }
+//# sourceMappingURL=URL.js.map

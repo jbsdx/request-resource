@@ -1,18 +1,12 @@
-import { Request } from '../lib/request/Request';
 import { JsonResource } from '../lib/resource/format/JsonResource';
 import { assert } from "chai";
-import { IResourceType } from '../lib/resource/IResourceType';
-import { URL } from '../lib/resource/URL';
-import { ResourceFormat } from '../lib/resource/ResourceFormat';
 import { RssResource } from '../lib/resource/format/RssResource';
-
 const jsonStringMock = '[{"test": "test"}]';
 const xmlStringMock = `
 <?xml version="1.0" encoding="utf-8"?>
 <base>
     <entry attribute="mock">entryValue
 </base>`;
-
 const rssStringMock = `<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
@@ -38,35 +32,28 @@ const rssStringMock = `<?xml version="1.0" encoding="utf-8"?>
   </channel>
 </rss>
 `;
-
 describe('RequestResource module', function () {
-
     describe('#JSON format resource test', function () {
-
         it('should parse valid JSON data', function (done) {
             let type = new JsonResource();
             type.convertToJson(jsonStringMock)
-            .then(response => {
+                .then(response => {
                 assert.equal(response[0].test, "test");
                 done();
             })
-            .catch(reason => done(reason));
+                .catch(reason => done(reason));
         });
-
     });
-
     describe('#RSS format resource test', function () {
-
         it('should parse valid JSON data', function (done) {
             let type = new RssResource();
             type.convertToJson(rssStringMock)
-            .then(response => {
+                .then(response => {
                 assert.equal(response.rss.version, "2.0");
                 done();
             })
-            .catch(reason => done(reason));
+                .catch(reason => done(reason));
         });
-
         /*
         it('should request localhost server', function (done) {
             let res = new Request("http://localhost:3090/", ResourceFormat.RSS);
@@ -78,8 +65,6 @@ describe('RequestResource module', function () {
             .catch(reason => done(reason));
         });
         */
-
-
     });
-
 });
+//# sourceMappingURL=test.js.map

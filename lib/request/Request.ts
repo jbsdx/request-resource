@@ -1,7 +1,8 @@
 import { IResourceType } from '../resource/IResourceType';
 import { ResourceFormat } from '../resource/ResourceFormat';
 import { JsonResource } from '../resource/format/JsonResource';
-import request from 'superagent';
+import { RssResource } from '../resource/format/RssResource';
+import * as request from 'superagent';
 import { URL } from '../resource/URL';
 
 export class Request {
@@ -22,7 +23,7 @@ export class Request {
                 this.type = new JsonResource();
                 break;
             case ResourceFormat.RSS:
-                //this.type = new RssResource();
+                this.type = new RssResource();
                 break;
             case ResourceFormat.XML:
                 //this.type = new XmlResource();

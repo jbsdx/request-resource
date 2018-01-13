@@ -1,5 +1,4 @@
 import { IResourceType } from '../IResourceType';
-import { ResourceFormat } from '../ResourceFormat';
 
 export class JsonResource implements IResourceType {
 
