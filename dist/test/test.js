@@ -1,11 +1,11 @@
 import { JsonResource } from '../lib/resource/format/JsonResource';
 import { assert } from "chai";
 import { RssResource } from '../lib/resource/format/RssResource';
+import { XmlResource } from '../lib/resource/format/XmlResource';
 const jsonStringMock = '[{"test": "test"}]';
-const xmlStringMock = `
-<?xml version="1.0" encoding="utf-8"?>
-<base>
-    <entry attribute="mock">entryValue
+const xmlStringMock = `<?xml version="2.0" encoding="utf-8"?>
+<base field="test">
+    <entry attribute="mock">entryValue</entry>
 </base>`;
 const rssStringMock = `<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
@@ -45,7 +45,7 @@ describe('RequestResource module', function () {
         });
     });
     describe('#RSS format resource test', function () {
-        it('should parse valid JSON data', function (done) {
+        it('should parse valid RSS data', function (done) {
             let type = new RssResource();
             type.convertToJson(rssStringMock)
                 .then(response => {
@@ -56,7 +56,7 @@ describe('RequestResource module', function () {
         });
         /*
         it('should request localhost server', function (done) {
-            let res = new Request("http://localhost:3090/", ResourceFormat.RSS);
+            let res = new Request("http://localhost:3090/", ResourceFormat.XML);
             res.fetch()
             .then(response => {
                 assert.equal(response.rss.version, "2.0");
@@ -65,6 +65,17 @@ describe('RequestResource module', function () {
             .catch(reason => done(reason));
         });
         */
+    });
+    describe('#XML format resource test', function () {
+        it('should parse valid XML data', function (done) {
+            let type = new XmlResource();
+            type.convertToJson(xmlStringMock)
+                .then(response => {
+                assert.equal(response.base.field, "test");
+                done();
+            })
+                .catch(reason => done(reason));
+        });
     });
 });
 //# sourceMappingURL=test.js.map

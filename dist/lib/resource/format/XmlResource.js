@@ -6,13 +6,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { XmlResource } from './XmlResource';
-export class RssResource {
+import { toJson } from 'xml2json';
+import { JsonResource } from './JsonResource';
+export class XmlResource {
     convertToJson(response) {
         return __awaiter(this, void 0, void 0, function* () {
-            let res = new XmlResource();
-            return res.convertToJson(response);
+            let promise = new Promise((resolve, reject) => {
+                try {
+                    let json = toJson(response);
+                    let jsonResource = new JsonResource();
+                    jsonResource.convertToJson(json)
+                        .then((res) => resolve(res))
+                        .catch((rea) => reject(rea));
+                }
+                catch (reason) {
+                    reject(reason);
+                }
+            });
+            return promise;
         });
     }
 }
-//# sourceMappingURL=RssResource.js.map
+//# sourceMappingURL=XmlResource.js.map
