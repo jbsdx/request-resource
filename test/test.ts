@@ -1,39 +1,55 @@
 import { Request } from '../lib/request/Request';
 import { JsonResource } from '../lib/resource/format/JsonResource';
 import { assert } from "chai";
-import {URL} from 'url';
-import { IResourceType } from '../dist/resource/IResourceType';
+import { IResourceType } from '../lib/resource/IResourceType';
+import { URL } from '../lib/resource/URL';
+import { ResourceFormat } from '../lib/resource/ResourceFormat';
 
 const jsonStringMock = '[{"test": "test"}]';
+const xmlStringMock = `
+<?xml version="1.0" encoding="utf-8"?>
+<base>
+    <entry attribute="mock">entryValue
+</base>`;
 
-const serverMock = function(url: URL, type: IResourceType) {
-    this.fetch = function(): Promise<any> {
-        let promise = new Promise<any>((resolve) => {
-            type.convertToJson(jsonStringMock)
-                .then(response => {
-                    resolve(response);
-                });
-        });
-        return promise;
-    };
-};
+const rssStringMock = `
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Titel des Feeds</title>
+    <link>URL der Webpräsenz</link>
+    <description>Kurze Beschreibung des Feeds</description>
+    <language>Sprache des Feeds (z. B. "de-de")</language>
+    <copyright>Autor des Feeds</copyright>
+    <pubDate>Erstellungsdatum("Tue, 8 Jul 2008 2:43:19")</pubDate>
+    <image>
+      <url>URL einer einzubindenden Grafik</url>
+      <title>Bildtitel</title>
+      <link>URL, mit der das Bild verknüpft ist</link>
+    </image>
+    <item>
+      <title>Titel des Eintrags</title>
+      <description>Kurze Zusammenfassung des Eintrags</description>
+      <link>Link zum vollständigen Eintrag</link>
+      <author>Autor des Artikels, E-Mail-Adresse</author>
+      <guid>Eindeutige Identifikation des Eintrages</guid>
+      <pubDate>Datum des Items</pubDate>
+    </item>
+  </channel>
+</rss>
+`;
 
 describe('RequestResource module', function () {
+
     describe('#JSON format resource test', function () {
 
         it('should parse valid JSON data', function (done) {
-
             let type = new JsonResource();
-            let url = new URL("http://localhost:3090/");
-            let _agent = new serverMock(url, type)
-                _agent.fetch()
-                .then((response) => {
-                    assert.equal(response[0].test, "test");
-                    done();
-                })
-                .catch((reason) => {
-                    done(reason);
-                });
+            type.convertToJson(jsonStringMock)
+            .then(response => {
+                assert.equal(response[0].test, "test");
+                done();
+            });
         });
 
     });

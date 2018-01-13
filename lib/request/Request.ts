@@ -1,56 +1,54 @@
 import { IResourceType } from '../resource/IResourceType';
-import request = require("superagent");
+import { ResourceFormat } from '../resource/ResourceFormat';
+import { JsonResource } from '../resource/format/JsonResource';
+import request from 'superagent';
+import { URL } from '../resource/URL';
 
 export class Request {
 
     private type: IResourceType;
     private url: URL;
 
-
-    constructor(url: URL, type: IResourceType) {
-        this.url = url;
-        this.type= type;
+    constructor(
+        url: string,
+        public resourceFormat: ResourceFormat) {
+            this.resolveType();
+            this.url = new URL(url);
     }
 
-	public get $url(): URL {
-		return this.url;
-	}
-
-	public set $url(value: URL) {
-		this.url = value;
-	}
+    private resolveType() {
+        switch (this.resourceFormat) {
+            case ResourceFormat.JSON:
+                this.type = new JsonResource();
+                break;
+            case ResourceFormat.RSS:
+                //this.type = new RssResource();
+                break;
+            case ResourceFormat.XML:
+                //this.type = new XmlResource();
+        }
+    }
     
-    public isValid(): boolean {
-        let expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi,
-            regex = new RegExp(expression),
-            valid = false;
-
-        if (this.url.toString().match(regex)) {
-            valid = true;
-        } 
-        return valid;
-    }
-
-
     public async fetch(): Promise<any> {
         let promise = new Promise<any>((resolve,reject) => {
+            if (!this.url.isValid()) {
+                reject({error: "URL not valid!", url: this.url});
+            } else {
+                request
+                    .get(this.url.toString())
+                    .then((res) => {
+                        return this.type.convertToJson(res.text);
+                    })
+                    .then((json) => {
+                        resolve(json);
+                    })
+                    .catch((reason) => {
+                        reject(reason);
+                    });
+            }
             
-            request
-                .get(this.url.toString())
-                .then((res) => {
-                    return this.type.convertToJson(res.text);
-                })
-                .then((json) => {
-                    console.log("Got json data", json);
-                    resolve(json);
-                })
-                .catch((reason) => {
-                    console.log(reason);
-                    reject(reason);
-                });
         });
        return promise;
-        
     }
 
 }

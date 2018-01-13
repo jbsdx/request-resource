@@ -1,12 +1,7 @@
 import { IResourceType } from '../IResourceType';
-import { ResourceType } from '../ResourceType';
 import { ResourceFormat } from '../ResourceFormat';
 
-export class JsonResource extends ResourceType implements IResourceType {
-
-    public getType(): ResourceFormat {
-        return ResourceFormat.JSON;
-    }
+export class JsonResource implements IResourceType {
 
     public async convertToJson(response: string): Promise<any>  {
         let promise = new Promise<any>((resolve, reject) => {
